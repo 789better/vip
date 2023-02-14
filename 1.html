@@ -16,34 +16,8 @@ function random_pick(input){
       if (input_2 === undefined){input_2 = input[0];}
       return input_2;
     }
-function makeRequest (method, url, data) {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.onload = function () {
-      if (this.status >= 200 && this.status < 300) {
-        resolve(xhr.response);
-      } else {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText
-      });
-    };
-    if(method=="POST" && data){
-        xhr.send(data);
-    }else{
-        xhr.send();
-    }
-  });
-}
-		async function getUserProfile() {
+
+async function getUserProfile() {
     profile = await liff.getProfile()
     pictureUrl = profile.pictureUrl
     userId = profile.userId
@@ -53,9 +27,8 @@ function makeRequest (method, url, data) {
     if (pictureUrl == undefined) {
         pictureUrl = ''
     }
-
 		}
-		async function main() {
+async function main() {
 			
 			liff.ready.then(() => {
         if (liff.isLoggedIn()) {
@@ -212,8 +185,6 @@ function makeRequest (method, url, data) {
 				}
 			]).then(async function (res) {
       if (res) {
-        // succeeded in sending a message through TargetPicker
-        // console.log(`[${res.status}] Message sent!`)
 	  if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
     await liff.sendMessages([
       {
@@ -221,37 +192,20 @@ function makeRequest (method, url, data) {
         "text": "แชร์ห้องแห่งความลับ"
       }
     ])
-    // $('#demo').html('แชร์สำเร็จ สิ้นสุดการแชร์ กรุณารอสักครู่')
   }
-	// await makeRequest('GET', "https://script.google.com/macros/s/AKfycbwLOzsRg5iw7OVQHGjwcO0Fk-xxH0xR96HvXdGUWBu8dYZuv7mqaa0jrGMpDZQ7-REBcQ/exec?userId=" + userId + "&name=" + displayName +"&decode=" + decodedIDToken +"&pictureUrl=0")
         await liff.closeWindow()
       } else {
         const [majorVer, minorVer] = (liff.getLineVersion() || "").split('.');
         if (parseInt(majorVer) == 10 && parseInt(minorVer) < 11) {
-          // LINE 10.3.0 - 10.10.0
-          // Old LINE will access here regardless of user's action
-          // $('#demo').html('เกิดข้อผิดพลาด ระบบไม่นับการแชร์ โปรดอัพเดท LINE ให้เป็นเวอร์ชั่นล่าสุด')
 		await liff.closeWindow()
-	
         } else {
-          // LINE 10.11.0 -
-          // sending message canceled
-          // $('#demo').html('การแชร์สิ้นสุด ระบบจะไม่นับการแชร์')
 		await liff.closeWindow()
         }
       }
     }).catch(function (error) {
-      // something went wrong before sending a message
-      // $('#demo').html('ระบบกำลังปิดหน้าต่างอัตโนมัติ')
 	setTimeout(function() {liff.closeWindow()}, 500);
     })	
-			// await liff.closeWindow()
-		
-
-		}
-
-
-
+}
 
 
 $(document).ready(function() {
